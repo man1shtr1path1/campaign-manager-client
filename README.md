@@ -1,16 +1,16 @@
-git clone https://github.com/man1shtr1path1/campaign-manager-client.git
-
+### `git clone https://github.com/man1shtr1path1/campaign-manager-client.git`
 clones the repo
-cd frontend
 
+### `cd frontend`
 goes in the frontend folder
-npm i
 
+### `npm i`
 installs the dependencies
-npm start
 
-Runs the app in the development mode.
-Open http://localhost:3000 to view it in your browser.
+### `npm start`
 
-The page will reload when you make changes.
+Runs the app in the development mode.\
+Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+
+The page will reload when you make changes.\
 You may also see any lint errors in the console.
