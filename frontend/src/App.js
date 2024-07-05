@@ -3,7 +3,7 @@ import Detailpage from './pages/Detailpage';
 
 function App() {
   return (
-    <div className="App">
+    <div className="App" >
     <Detailpage/>
     </div>
   );

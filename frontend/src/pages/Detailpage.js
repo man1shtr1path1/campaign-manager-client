@@ -7,17 +7,21 @@ function Detailpage() {
   const [campaigns, setCampaigns] = useState([]);
   const [openModal, setOpenModal] = useState(false);
   const [editCampaignId, setEditCampaignId] = useState(null);
+
+
   useEffect(() => {
-      console.log("campaigns1",campaigns);
-    axios.get('http://localhost:5000/api/campaigns/')
-      .then(response => {
-        console.log("data",response.data);
-        setCampaigns(response.data);
-      })
-      .catch(error => {
-        console.error('There was an error fetching the campaigns!', error);
-      });
+    fetchCampaigns();
   }, []);
+
+  const fetchCampaigns = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/api/campaigns/');
+      setCampaigns(response.data);
+    } catch (error) {
+      console.error('Error fetching campaigns:', error);
+      throw error;
+    }
+  };
 
   const handleOpenModal = (id = null) => {
     setEditCampaignId(id);
@@ -66,6 +70,7 @@ function Detailpage() {
             <CampaignForm
               campaignId={editCampaignId}
               onClose={handleCloseModal}
+              fetchCampaigns={fetchCampaigns}
             />
           </Box>
         </Fade>
