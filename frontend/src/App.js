@@ -1,10 +1,10 @@
 import './App.css';
-import Detailpage from './pages/Detailpage';
+import DetailPage from './Components/LandingPage';
 
 function App() {
   return (
     <div className="App" >
-    <Detailpage/>
+    <DetailPage/>
     </div>
   );
 }

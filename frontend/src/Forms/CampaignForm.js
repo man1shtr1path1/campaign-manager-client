@@ -10,7 +10,7 @@ const CampaignFormModal = ({ onClose ,fetchCampaigns}) => {
     startDate: '',
     endDate: '',
     schedule: [],
-  });
+  }); 
   const [selectedDays, setSelectedDays] = useState([]);
   const handleClose = () => {
     setOpen(false);
@@ -47,7 +47,6 @@ const CampaignFormModal = ({ onClose ,fetchCampaigns}) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
     const formattedCampaign = {
       ...campaign,
       startDate: campaign.startDate,

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Container, Button, Typography, Box, Modal, Fade, Backdrop } from '@mui/material';
-import CampaignList from './CampaignList';
+import CampaignCard from './CampaignCard';
 import CampaignForm from '../Forms/CampaignForm';
-function Detailpage() {
+function DetailPage() {
   const [campaigns, setCampaigns] = useState([]);
   const [openModal, setOpenModal] = useState(false);
   const [editCampaignId, setEditCampaignId] = useState(null);
@@ -53,7 +53,7 @@ function Detailpage() {
         <Button variant="contained" color="primary" onClick={() => handleOpenModal()}>
           Create New Campaign
         </Button>
-        <CampaignList campaigns={campaigns?campaigns:[]} onEdit={handleOpenModal} />
+        <CampaignCard campaigns={campaigns?campaigns:[]} onEdit={handleOpenModal} fetchCampaigns={fetchCampaigns}/>
       </Box>
 
       <Modal
@@ -79,4 +79,4 @@ function Detailpage() {
   );
 }
 
-export default Detailpage;
+export default DetailPage;

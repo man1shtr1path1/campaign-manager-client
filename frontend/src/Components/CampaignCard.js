@@ -1,32 +1,15 @@
 import React from 'react';
 import {
-  Button,
-  Card,
-  CardContent,
-  Typography,
-  Grid,
-  Modal,
-  Box,
-  TextField,
-  Select,
-  MenuItem,
-  InputLabel,
-  FormControl,
-  FormControlLabel,
-  FormGroup,
-  Checkbox,
-  IconButton,
-  Paper,
-  Divider,
+  Button,Card,CardContent,Typography,Grid,Modal,Box,TextField,Select,MenuItem,InputLabel,FormControl,FormControlLabel,Checkbox,IconButton,
 } from '@mui/material';
 import axios from 'axios';
 import CloseIcon from '@mui/icons-material/Close';
 
-const CampaignList = ({ campaigns }) => {
+const CampaignCard = ({ campaigns ,fetchCampaigns}) => {
   const [open, setOpen] = React.useState(false);
   const [editedCampaign, setEditedCampaign] = React.useState({
     type: '',
-    startDate: '',
+    startDate: "",
     endDate: '',
     schedule: [
       { day: 'Monday', startTime: '', endTime: '', selected: false },
@@ -55,14 +38,6 @@ const CampaignList = ({ campaigns }) => {
     setEditedCampaign({ ...editedCampaign, [name]: value });
   };
 
-  const handleCheckboxChange = (day) => {
-    const newSchedule = editedCampaign.schedule.map((item) => ({
-      ...item,
-      selected: day === item.day ? !item.selected : item.selected,
-    }));
-    setEditedCampaign({ ...editedCampaign, schedule: newSchedule });
-  };
-
   const handleTimeChange = (day, timeType, value) => {
     const newSchedule = editedCampaign.schedule.map((item) => ({
       ...item,
@@ -74,37 +49,41 @@ const CampaignList = ({ campaigns }) => {
   const selectedWeekdays = editedCampaign.schedule.map((item) => item.day);
 
   const handleAddWeekday = (weekday) => {
-    const isExistingDay = editedCampaign.schedule.some((item) => item.day === weekday);
-    if (!isExistingDay) {
-      const newScheduleItem = {
-        day: weekday,
-        startTime: '',
-        endTime: '',
-        selected: false,
-      };
-      setEditedCampaign((prevState) => ({
-        ...prevState,
-        schedule: [...prevState.schedule, newScheduleItem],
-      }));
+    const updatedSchedule = [...editedCampaign.schedule];
+    const index = updatedSchedule.findIndex((item) => item.day === weekday);
+
+    if (index !== -1) {
+        updatedSchedule.splice(index, 1);
+    } else {
+        const newScheduleItem = {
+            day: weekday,
+            startTime: '',
+            endTime: '',
+            selected: false,
+        };
+        updatedSchedule.push(newScheduleItem);
     }
-  };
 
-  const handleSaveChanges = () => {
-  
+    setEditedCampaign((prevState) => ({
+        ...prevState,
+        schedule: updatedSchedule,
+    }));
+};
+   
+
+  const handleSaveChanges = (e) => {
+    e.preventDefault();
     const { _id, ...updatedCampaign } = editedCampaign;
-
     axios
       .put(`http://localhost:5000/api/campaigns/${_id}`, updatedCampaign)
-      
       .then((response) => {
-        console.log('Updated campaign successfully:', response.data);
         handleClose();
+        fetchCampaigns()
       })
       .catch((error) => {
         console.error('Error updating campaign:', error);
       });
   };
-
   return (
     <Grid container spacing={2} sx={{ marginTop: '16px' }}>
       {campaigns.map((campaign) => (
@@ -122,7 +101,7 @@ const CampaignList = ({ campaigns }) => {
             }}
           >
             <CardContent>
-              <Typography variant="h6" gutterBottom>
+              <Typography variant="h6" gutterBottom  sx={{color:'pink'}}>
                 Campaign Details
               </Typography>
               <Typography variant="body1">Type: {campaign.type}</Typography>
@@ -164,37 +143,11 @@ const CampaignList = ({ campaigns }) => {
         aria-describedby="edit-campaign-modal-description"
       >
         <Box
-          sx={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            width: '90%',
-            maxWidth: 600,
-            bgcolor: 'background.paper',
-            boxShadow: 24,
-            p: 2,
-            maxHeight: '90vh',
-            overflowY: 'auto',
-          }}
-        >
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'flex-end',
-              marginBottom: '8px',
-            }}
-          >
-            
+          sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '90%', maxWidth: 600, bgcolor: 'background.paper',boxShadow: 24, p: 2, maxHeight: '90vh', overflowY: 'auto', }}>
+          <Box sx={{display: 'flex',justifyContent: 'flex-end',marginBottom: '8px', }}>
           </Box>
           <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
-          <Typography
-            id="edit-campaign-modal-title"
-            variant="h6"
-            component="h2"
-            gutterBottom
-            sx={{ marginBottom: '16px' }}
-          >
+          <Typography id="edit-campaign-modal-title" variant="h6" component="h2" gutterBotto sx={{ marginBottom: '16px' }}>
             Edit Campaign
           </Typography>
           <Box>
@@ -233,7 +186,7 @@ const CampaignList = ({ campaigns }) => {
                   type="date"
                   name="startDate"
                   label="Start Date"
-                  value={editedCampaign.startDate}
+                  value={editedCampaign.startDate.split('T')[0]}
                   onChange={handleChange}
                   InputLabelProps={{ shrink: true }}
                   variant="outlined"
@@ -245,7 +198,7 @@ const CampaignList = ({ campaigns }) => {
                   type="date"
                   name="endDate"
                   label="End Date"
-                  value={editedCampaign.endDate}
+                  value={editedCampaign.endDate.split('T')[0]}
                   onChange={handleChange}
                   InputLabelProps={{ shrink: true }}
                   variant="outlined"
@@ -386,7 +339,6 @@ const CampaignList = ({ campaigns }) => {
   );
 };
 
-export default CampaignList;
-
+export default CampaignCard;
 
 
