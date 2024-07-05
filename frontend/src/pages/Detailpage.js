@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Container, Button, Typography, Box } from '@mui/material';
-import CampaignList from './CampaignList.js';
+import { Container, Button, Typography, Box, Modal, Fade, Backdrop } from '@mui/material';
+import CampaignList from './CampaignList';
+import CampaignForm from '../Forms/CampaignForm';
 function Detailpage() {
   const [campaigns, setCampaigns] = useState([]);
   const [openModal, setOpenModal] = useState(false);
@@ -23,8 +24,21 @@ function Detailpage() {
     setOpenModal(true);
   };
 
+  const handleCloseModal = () => {
+    setEditCampaignId(null);
+    setOpenModal(false);
+  };
 
-  
+  const handleCampaignUpdated = () => {
+    handleCloseModal();
+    axios.get('/api/campaigns')
+      .then(response => {
+        setCampaigns(response.data);
+      })
+      .catch(error => {
+        console.error('There was an error fetching the campaigns!', error);
+      });
+  };
 
   return (
     <Container>
@@ -32,8 +46,30 @@ function Detailpage() {
         <Typography variant="h4" gutterBottom>
           Campaign Management
         </Typography>
-        <CampaignList campaigns={campaigns?campaigns:[]}/>
+        <Button variant="contained" color="primary" onClick={() => handleOpenModal()}>
+          Create New Campaign
+        </Button>
+        <CampaignList campaigns={campaigns?campaigns:[]} onEdit={handleOpenModal} />
       </Box>
+
+      <Modal
+        open={openModal}
+        onClose={handleCloseModal}
+        closeAfterTransition
+        BackdropComponent={Backdrop}
+        BackdropProps={{
+          timeout: 500,
+        }}
+      >
+        <Fade in={openModal}>
+          <Box p={3} bgcolor="background.paper">
+            <CampaignForm
+              campaignId={editCampaignId}
+              onClose={handleCloseModal}
+            />
+          </Box>
+        </Fade>
+      </Modal>
     </Container>
   );
 }
